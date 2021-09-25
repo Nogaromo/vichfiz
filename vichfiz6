@@ -1,0 +1,62 @@
+from math import sqrt
+from math import pi
+from math import exp
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+
+
+M1 = 40*10**4
+M2 = 30*10**4
+r = 3.2
+G = 6.67 * 10 ** (-11)
+F = G*M2*M1/r**2
+
+def delta_F(delta_M1, delta_M2, delta_r):
+    G = 6.67*10**(-11)
+    deltaF = G*sqrt(((M2*delta_M1)/(r**2))**2+((M1*delta_M2)/(r**2))**2+((2*M1*M2*delta_r)/(r**3))**2)
+    return deltaF
+
+
+print(delta_F(0.05*10**4, 0.1*10**4, 0.01))
+print(F)
+
+
+A = np.random.normal(loc=M1, scale=0.05*10**4, size=10**5)
+B = np.random.normal(loc=M2, scale=0.1*10**4, size=10**5)
+C = np.random.normal(loc=r, scale=0.01, size=10**5)
+M_F = G*A*B/(C)**2
+
+
+sigma = sqrt(np.var(M_F))
+mu = np.average(M_F)
+mu1 = np.mean(M_F)
+
+print(sigma, mu, mu1)
+
+plt.hist(M_F, density=True, bins=1000)
+
+y = ((1 / (sqrt(2 * pi) * delta_F(0.05*10**4, 0.1*10**4, 0.01))) *
+     np.exp(-0.5 * (1 / delta_F(0.05*10**4, 0.1*10**4, 0.01) * (M_F - F))**2))
+
+plt.plot(M_F, y, '.', color='red')
+
+
+plt.show()
+
+A1 = np.random.normal(loc=M1, scale=2*10**4, size=10**5)
+B1 = np.random.normal(loc=M2, scale=10*10**4, size=10**5)
+C1 = np.random.normal(loc=r, scale=1, size=10**5)
+M_F1 = G*A1*B1/(C1)**2
+
+
+plt.hist(M_F1, density=True, bins=1000)
+
+
+y1 = ((1 / (sqrt(2 * pi) * delta_F(2*10**4, 10*10**4, 1))) *
+     np.exp(-0.5 * (1 / delta_F(2*10**4, 10*10**4, 1) * (M_F - F))**2))
+
+plt.plot(M_F1, y1, '.', color='red')
+
+plt.show()
