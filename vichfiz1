@@ -1,0 +1,38 @@
+def solve_quad(b, c):
+
+    from cmath import sqrt
+
+    x_1 = (-b+sqrt(b**2-4*c))/2
+    x_2 = (-b-sqrt(b**2-4*c))/2
+    if b > 0:
+        if abs(c/b) < 10**(-3):
+            x_1 = -c / b
+    if b < 0:
+        if abs(c / b) < 10 ** (-3):
+            x_2 = -c / b
+
+
+
+    return x_1, x_2
+
+
+
+
+
+
+
+
+
+from numpy import allclose
+
+
+
+variants = [{'b': 4.0, 'c': 3.0},
+                {'b': 2.0, 'c': 1.0},
+                {'b': 0.5, 'c': 4.0},
+                {'b': 1e10, 'c': 3.0},
+                {'b': -1e10, 'c': 4.0}, ]
+for var in variants:
+    x1, x2 = solve_quad(**var)
+    print(allclose(x1 * x2, var['c']))
+print(solve_quad(-1e10, 4))
