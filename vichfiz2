@@ -1,0 +1,32 @@
+import sys
+sys.setrecursionlimit(1500)
+from math import exp
+import sympy as sy
+x = sy.symbols('x')
+def recur12(n):
+
+    from math import log
+    a = 0.1
+    I_0 = log(a+1)-log(a)
+    if n == 0:
+        return I_0
+    return -a * recur12(n-1) + 1 / n
+
+
+
+
+a = 10
+for i in range(1000, 25, -1):
+    if i == 1000:
+        I_n = 0
+    I_n = 1/(i*a)-1/a*I_n
+
+
+
+print(recur12(25))
+
+
+print(sy.integrate(x**(25)/(x+0.1), (x, 0, 1)) )
+print('-'*250)
+print(I_n)
+print(float(sy.integrate(x**(25)/(x+10), (x, 0, 1))) )
