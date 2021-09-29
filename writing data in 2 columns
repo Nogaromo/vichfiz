@@ -1,0 +1,7 @@
+ab = zip(M_F1, y1)
+
+
+with open("data3.txt",'w') as f:
+    writer = csv.writer(f, delimiter='\t')
+    writer.writerows(ab)
+quit()
