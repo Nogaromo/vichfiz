@@ -1,0 +1,33 @@
+import numpy as np
+import time
+N = int(input())
+M = int(input())
+
+
+U = np.random.randint(1, 10, size=(N, M))
+V = np.random.randint(1, 10, size=(M, N))
+A = np.diag(np.random.random(N))
+
+
+def woodbury(A, U, V):
+    C = np.eye(M)
+    A_inv = np.linalg.inv(A)
+    a = C + V @ A_inv @ U
+    a_inv = np.linalg.inv(a)
+    return A_inv - A_inv @ U @ a_inv @ V @ A_inv
+
+
+start1 = time.time()
+print(woodbury(A, U, V))
+end1 = time.time()
+print(end1-start1)
+
+print("*"*250)
+
+start2 = time.time()
+
+
+C = A + U @ V @ np.eye(N)
+print(np.linalg.inv(C))
+end2 = time.time()
+print(end2 - start2)
