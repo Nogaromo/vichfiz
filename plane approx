@@ -1,0 +1,40 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+with np.load('data_distance_svd.npz') as data:
+    xp, yp, zp = data['xp'], data['yp'], data['zp']
+
+points = np.vstack((xp, yp, zp))
+
+
+tmp_A = []
+tmp_b = []
+for i in range(len(xp)):
+    tmp_A.append([xp[i], yp[i], 1])
+    tmp_b.append(zp[i])
+
+
+b = np.matrix(tmp_b).T
+A = np.matrix(tmp_A)
+
+
+fit = np.linalg.lstsq(A, b, rcond=None)
+print(fit[0])
+
+
+fig = plt.figure()
+
+
+xx, yy = np.meshgrid(range(10), range(10))
+
+
+z = (float(fit[0][0]) * xx + float(fit[0][1]) * yy + float(fit[0][2]))
+
+ax = fig.add_subplot(111, projection='3d')
+ax.plot_surface(xx, yy, z, alpha=0.2)
+
+
+ax.scatter(xp, yp, zp)
+
+plt.show()
