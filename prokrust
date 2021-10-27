@@ -1,0 +1,39 @@
+import numpy as np
+import matplotlib.pyplot as plt
+data = np.loadtxt('signatureData2.csv', delimiter=',')
+
+
+x1 = np.array([np.mean(data[:, 0]), np.mean(data[:, 1])])
+x2 = np.array([np.mean(data[:, 2]), np.mean(data[:, 3])])
+X1 = np.array(data[:, 0])
+Y1 = np.array(data[:, 1])
+X2 = np.array(data[:, 2])
+Y2 = np.array(data[:, 3])
+
+XY1 = np.vstack((X1, Y1)).T
+XY2 = np.vstack((X2, Y2)).T
+
+
+plt.plot(X1, Y1, '.', 'm')
+plt.plot(X2, Y2, '.', 'c')
+plt.show()
+
+
+Xnew1 = X1 - x1[0]
+Ynew1 = Y1 - x1[1]
+Xnew2 = X2 - x2[0]
+Ynew2 = Y2 - x2[1]
+
+a = np.vstack((Xnew1, Ynew1)).T
+b = np.vstack((Xnew2, Ynew2)).T
+
+
+U, D, V = np.linalg.svd(a.T @ b)
+R = U @ V
+mu = x2 - R.T @ x1
+
+
+new1 = XY1 @ R + mu
+plt.plot(new1[:, 0], new1[:, 1], '.', 'm')
+plt.plot(X2, Y2, '.', 'c')
+plt.show()
