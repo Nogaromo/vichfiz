@@ -1,0 +1,37 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+a = np.zeros((15, 28))
+a[2: -2, 1] = 1
+a[2, 2:6] = 1
+a[2:7, 6] = 1
+a[7:-2, 7] = 1
+a[7, 2:7] = 1
+a[-3, 2:7] = 1
+a[2:-2, 10] = 1
+a[2: -2, 14] = 1
+a[2: -2, 18] = 1
+a[-3, 10:19] = 1
+a[2:13, 26] = 1
+a[12, 21:26] = 1
+a[2, 21:26] = 1
+a[7, 21:26] = 1
+plt.imshow(a)
+plt.show()
+rnk = np.linalg.matrix_rank(a)
+U, D, V = np.linalg.svd(a)
+newd = np.diag(D[0:rnk])
+for i in range(rnk):
+    B_i = U[:, 0:i] @ newd[:i, :i] @ V[0:i, :]
+    plt.imshow(B_i)
+    plt.show()
+
+print("*"*250)
+c = []
+twonorm = np.real(np.sqrt(max(np.linalg.eigvals(a.T @ a))))
+print("Сингулярное разложение:\n", np.linalg.svd(a))
+print("*"*250)
+print("Ранг матрицы a:", rnk)
+print("*"*250)
+print("2 норма:", twonorm)
