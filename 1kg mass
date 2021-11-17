@@ -1,0 +1,14 @@
+import numpy as np
+A = np.zeros((2, 10))
+A[1, :] = 1
+for i in range(10):
+    A[0, i] = 9.5 - i
+print(A)
+U, D, V = np.linalg.svd(A)
+a = np.zeros((2, 1))
+a[0] = 1
+D_1 = np.zeros((10, 2))
+D_1[0, 0] = D[0]
+D_1[1, 1] = D[1]
+x = V @ D_1 @ U.T @ a
+print(x)
