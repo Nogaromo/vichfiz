@@ -1,0 +1,23 @@
+import numpy as np
+C = np.array(([1, 0.9, 0.7], [0.9, 1, 0.4], [0.7, 0.4, 1]))
+C1 = C.copy()
+C1[1, 2] = 0.3
+C1[2, 1] = 0.3
+l1_new, l2_new, l3_new = np.linalg.eigvals(C1)
+if l1_new < 0:
+    l1_new = 0
+if l2_new < 0:
+    l2_new = 0
+if l3_new < 0:
+    l3_new = 0
+s1_new, s2_new, s3_new = l1_new*np.linalg.eig(C1)[1][:, 0], l2_new*np.linalg.eig(C1)[1][:, 1],\
+                         l3_new*np.linalg.eig(C1)[1][:, 2]
+B_ = np.array((s1_new, s2_new, s3_new)).T
+n1, n2, n3 = np.linalg.norm(B_[0, :]), np.linalg.norm(B_[1, :]), np.linalg.norm(B_[2, :])
+s11, s22, s33 = B_[0, :] / n1, B_[1, :] / n2, B_[2, :] / n3
+B = np.array((s11, s22, s33))
+C1_new = B @ B.T
+print(C1_new)
+if C1_new[0, 0] > 0 and np.linalg.det(np.array((C1_new[0, :2], C1_new[1, :2])))\
+        and np.linalg.det(C1_new) > 0:
+    print('Матрица положительно определена')
