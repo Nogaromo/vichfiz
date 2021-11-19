@@ -16,13 +16,14 @@ def qr(A, i):
         A_k = R @ Q
         qq = qq @ Q
     return sorted(np.diag(A_k))
+
+
 print(qr(A, 10))
-
-
 minel1 = spectr[0]
 for k in range(1, 11, 1):
-    minel2 = min(qr(A, k))
+    minel2 = qr(A, k)[0]
     percentage = minel1 / minel2
     if percentage < 0.01 or 1 - percentage < 0.01:
         print(k)
         break
+
