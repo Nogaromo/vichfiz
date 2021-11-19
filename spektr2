@@ -1,0 +1,28 @@
+import numpy as np
+import numpy.linalg
+n = 10
+a = np.random.normal(0, 1, (n, n))
+A = a @ a.T
+spectr = np.linalg.eigvalsh(A)
+print('Спектр матрицы:\n', sorted(spectr))
+Q, R = np.linalg.qr(A)
+
+
+def qr(A, i):
+    A_k = np.copy(A)
+    qq = np.eye(10)
+    for k in range(i):
+        Q, R = np.linalg.qr(A_k)
+        A_k = R @ Q
+        qq = qq @ Q
+    return sorted(np.diag(A_k))
+print(qr(A, 10))
+
+
+minel1 = spectr[0]
+for k in range(1, 11, 1):
+    minel2 = min(qr(A, k))
+    percentage = minel1 / minel2
+    if percentage < 0.01 or 1 - percentage < 0.01:
+        print(k)
+        break
