@@ -1,0 +1,9 @@
+import numpy as np
+import numpy.linalg
+import matplotlib.pyplot as plt
+n = 1000
+a = np.random.normal(0, 1, (n, n))
+A = a + a.T
+print('Спектр матрицы:\n', numpy.linalg.eigvalsh(A))
+plt.hist(A)
+plt.show()
