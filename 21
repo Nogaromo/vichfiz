@@ -1,0 +1,55 @@
+import numpy as np
+from scipy.linalg import expm
+import matplotlib.pyplot as plt
+
+
+def kroneker(k, m):
+    if k == m:
+        return 1
+    else:
+        return 0
+
+
+N = 32
+A = np.zeros((N, N))
+for i in range(N):
+    for j in range(N):
+        A[i][j] = -kroneker(i, j) + kroneker(i, j-1) + kroneker(i, j-2)
+spektr = np.linalg.eigvalsh(A)
+print(spektr)
+
+t = np.linspace(0, 50, 50)
+y = []
+for i in range(len(t)):
+    exp_At = expm(A*t[i])
+    y.append(np.linalg.norm(exp_At))
+plt.plot(t, y)
+plt.grid()
+plt.show()
+eps = np.zeros(5)
+for i in range(len(eps)):
+    eps[i] = 10 ** (-i-1)
+
+
+def sigma_m(a, b):
+    z = complex(a, b)
+    v, d, u = np.linalg.svd(z * np.eye(N) - A)
+    return min(d)
+
+
+a = np.linspace(-10, 10, 100)
+b = np.linspace(-10, 10, 100)
+x = []
+y = []
+for i in range(len(a)):
+    for j in range(len(b)):
+        if sigma_m(a[i], b[j]) <= eps[0]:                                #меняем индекс у eps и получаем то, что хотели
+            x.append(a[i])
+            y.append(b[j])
+
+
+plt.plot(x, y, 'o', color='r')
+plt.axis('equal')
+plt.grid()
+
+plt.show()
