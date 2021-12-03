@@ -3,12 +3,13 @@ import numpy as np
 A = np.array([[0, 1], [0, 0]])
 spektr = np.linalg.eigvalsh(A)
 print(spektr)
-eps = 0.01
+eps = 0.1
 R = np.sqrt((1 + np.sqrt(1 + eps ** 2)) / eps ** 2)    #просто расписано условие 4 из 26.1 Trefethen, Bau
 print(R)
 circle1 = plt.Circle((0, 0), R, color='#7988E4')
 fig, ax = plt.subplots()
 ax.add_patch(circle1)
+plt.axis('equal')
 plt.grid()
 plt.xlim([-R - 5, R + 5])
 plt.ylim([-R - 5, R + 5])
