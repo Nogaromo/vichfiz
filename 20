@@ -1,0 +1,44 @@
+import numpy as np
+import time
+time1 = time.time()
+
+
+def inv(d, u):
+    g = 0
+    for i in range(len(d)):
+        g += (u[i]**2)/d[i] #след матрицы u @ u.T @ D^-1
+
+    new_d = 1 / d #обратная для D
+    return new_d, float(g)
+
+
+def power_iteration(d, u, g, vec):
+    i = 0
+    error = 1
+    eps = 1e-3
+    while error > eps and i < 1000:
+        outvec = d * vec - 1 / (1+g) * (u / d) @ ((u / d).T @ vec)
+        vec_normed = outvec / np.linalg.norm(outvec)
+        lm = vec.T @ outvec
+        error = np.linalg.norm(outvec - lm * vec[: np.newaxis], ord=1)
+        vec = vec_normed
+        i += 1
+    return lm, outvec / np.linalg.norm(outvec), i
+
+
+n = 10**5
+d = np.random.normal(0, 1, (n, 1))
+u = np.random.normal(0, 1, (n, 1))
+u = u / np.linalg.norm(u)
+new_d, g = inv(d, u)
+
+vec = np.random.random(size=n)
+vec = vec.reshape(-1, 1)
+l, e, k = power_iteration(new_d, u, g, vec)
+
+q = np.zeros((n, 1))
+for i in range(n): #применяем Bunch–Nielsen–Sorensen-formula
+    if d[i] != 1 / l:
+        q[i] = u[i]/(d[i]-1/l)
+q = q / np.linalg.norm(q)
+print(q, 1/float(l), time.time() - time1)
