@@ -42,3 +42,8 @@ for i in range(n): #применяем Bunch–Nielsen–Sorensen-formula
         q[i] = u[i]/(d[i]-1/l)
 q = q / np.linalg.norm(q)
 print(q, 1/float(l), time.time() - time1)
+
+#для n=100:
+#n = 10**2
+#A = np.diag(d)+u @ u.T / (u.T @ u)
+#l = min(np.linalg.eigh(A))
