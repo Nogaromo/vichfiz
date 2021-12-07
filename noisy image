@@ -1,0 +1,67 @@
+import numpy as np
+import matplotlib.pyplot as plt
+with np.load('data_noisy_image.npz') as data:
+    A, C = data['A'], data['C']
+
+
+def mat2vec(A):
+    h, w = A.shape
+    a = np.zeros(h * w, dtype=A.dtype )
+    A = np.flipud(A)
+    for i , row in enumerate(A):
+        a[i * w: i * w + w] = row
+    return a
+
+
+def vec2mat(a, shape):
+    h, w = shape
+    A = np . zeros(shape, dtype=a.dtype)
+    for i in range(h):
+        A[i, :] = a[i * w: i * w + w]
+    return np.flipud(A)
+
+
+plt.imshow(A)
+plt.show()
+
+
+a = np.zeros((24, 34))
+a[2: -2, 1] = 1
+a[2, 2:6] = 1
+a[2:7, 6] = 1
+a[7:-2, 7] = 1
+a[7, 2:7] = 1
+a[-3, 2:7] = 1
+a[2:-2, 10] = 1
+a[2: -2, 14] = 1
+a[2: -2, 18] = 1
+a[-3, 10:19] = 1
+a[2:13, 26] = 1
+a[12, 21:26] = 1
+a[2, 21:26] = 1
+a[7, 21:26] = 1
+plt.imshow(a)
+plt.show()
+
+
+a = mat2vec(a)
+print(np.shape(C), np.shape(a))
+a_1 = C @ a
+a_1 = vec2mat(a_1, (24, 34))
+plt.imshow(a_1)
+plt.show()
+
+
+U, D_1, V = np.linalg.svd(C)
+
+for i in range(len(D_1)):
+    D_1[i] = 1 / D_1[i]
+D = np.zeros((816, 1500))
+for i in range(350):
+    D[i, i] = D_1[i]
+a = mat2vec(A)
+print(np.shape(D))
+x = V.T @ D @ U.T @ a
+X = vec2mat(x, (16, 51))
+plt.imshow(X)
+plt.show()
