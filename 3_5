@@ -1,0 +1,49 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from progress.bar import IncrementalBar
+
+
+def newton_iteration(f, fder, x0, eps=1e-5, maxiter=1000):
+    x = x0
+    for i in range(0, maxiter):
+        fderxn = fder(x)
+        fxn = f(x)
+        if fderxn == 0:
+            return 'Производная обнулилась'
+        x_new = x - fxn / fderxn
+        if abs(x-x_new) < eps:
+            return x_new
+        x = x_new
+    return 'Не удалось найти решение'
+
+
+y = lambda x: x**3-1
+yder = lambda x: 3*x**2
+N = 200
+a = np.linspace(-1, 1, N)
+b = np.linspace(-1, 1, N)
+re = []
+im = []
+z1 = []
+z2 = []
+z3 = []
+x1 = np.zeros(N)
+bar = IncrementalBar('Countdown', max=N**2)
+for i in range(N):
+    for j in range(N):
+        bar.next()
+        z0 = complex(a[i], b[j])
+        re.append(np.real(newton_iteration(y, yder, z0)))
+        im.append(np.imag(newton_iteration(y, yder, z0)))
+        if np.imag(newton_iteration(y, yder, z0)) > 0:
+            z1.append(z0)
+        if np.imag(newton_iteration(y, yder, z0)) < 0:
+            z2.append(z0)
+        if np.round(np.imag(newton_iteration(y, yder, z0))) == 0:
+            z3.append(z0)
+bar.finish()
+plt.scatter(np.real(z1), np.imag(z1), c='#FF00FF')
+plt.scatter(np.real(z2), np.imag(z2), c='#0011FF')
+plt.scatter(np.real(z3), np.imag(z3), c='#FFFF00')
+plt.scatter(re, im, c='#1AFF00')
+plt.show()
