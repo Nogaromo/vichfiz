@@ -1,0 +1,24 @@
+import numpy as np
+from numpy import random
+from numpy import exp
+from progress.bar import IncrementalBar
+
+
+with np.load('data_89.npz') as data:
+    A = data['A4']
+N = 10**5
+
+
+def func(x):
+    return exp(-x.T @ A @ x) / (1+x.T @ x)
+
+
+s = 0.0
+bar = IncrementalBar('Progress', max=N)
+for i in range(N):
+    bar.next()
+    xrand = random.normal(size=np.shape(A)[0])
+    s += func(xrand)*(2*np.pi) ** (np.shape(xrand)[0] / 2) / (np.exp(-(xrand.T @ xrand)/2))
+bar.finish()
+integral = s/float(N)
+print(integral)
