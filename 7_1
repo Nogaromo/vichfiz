@@ -1,0 +1,20 @@
+import numpy as np
+from numpy import exp
+from scipy.optimize import minimize
+
+
+with np.load('data_89.npz') as data:
+    A, y = data['A2'], data['y2']
+n = A.shape[0]
+a = np.zeros(n+1)
+
+
+def func(a, A, y):
+    s = 0
+    for i in range(A.shape[1]):
+        s += (1 / (exp(A[:, i].T @ a[1:] + a[0]) + 1) - y[i])**2
+    return s
+
+
+res = minimize(fun=func, args=(A, y), x0=a)
+print(res.x)
