@@ -1,0 +1,24 @@
+import numpy as np
+from numpy import exp, sqrt, pi
+
+
+a = 0.0
+b = 1.0
+x = np.linspace(a, b, 10**5)
+
+
+def f(x):
+    if x == 0 or x == 1:
+        return 0
+    else:
+        return (exp(x)-1+x*(1-exp(1))) / sqrt(x*(1-x))
+
+
+def integrate(f, x, dx=1e-5):
+    s = 0
+    for i in range(len(x)-1):
+        s += (f(x[i+1])+f(x[i])) / 2 * dx
+    return s
+
+
+print(integrate(f, x, dx=1e-5)+pi/2*(np.exp(1)-1)+pi)
