@@ -1,0 +1,36 @@
+import numpy as np
+from autograd import grad
+import autograd.numpy as jnp
+from progress.bar import IncrementalBar
+
+
+
+with np.load('data_89.npz') as data:
+    A, y = data['A2'], data['y2']
+n = A.shape[0]
+a = np.ones(n + 1)
+
+
+def func(a):
+    with np.load('data_89.npz') as data:
+        A, y = data['A2'], data['y2']
+    s = 0
+    for i in range(A.shape[1]):
+        s += (1 / (jnp.exp(A[:, i].T @ a[1:] + a[0]) + 1) - y[i])**2
+    return s
+
+
+eps = 1e-2
+error = a
+grad_f = grad(func)
+bar = IncrementalBar('Progress', max=10**3)
+
+for i in range(10**3):
+    bar.next()
+    if np.linalg.norm(error) > eps:
+        a -= 0.1*grad_f(a)
+        error = grad_f(a)
+    else:
+        break
+bar.finish()
+print(f'Значение функции при градиентном спуске: {round(func(a), 3)}\n', a)
