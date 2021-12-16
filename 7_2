@@ -1,0 +1,41 @@
+import numpy as np
+from numpy import exp
+from progress.bar import IncrementalBar
+
+
+with np.load('data_89.npz') as data:
+    A, y = data['A2'], data['y2']
+n = A.shape[0]
+a = np.ones(n + 1)
+
+
+def func(a, A, y):
+
+    s = 0
+    for i in range(A.shape[1]):
+        s += (1 / (exp(A[:, i].T @ a[1:] + a[0]) + 1) - y[i])**2
+    return s
+
+
+def grad(f, a, dx=0.01):
+    g = []
+    for i in range(len(a)):
+        a1 = a.copy()
+        a1[i] = a[i] + dx
+        df = (f(a1, A, y) - f(a, A, y))/dx
+        g.append(df)
+    return np.array(g)
+
+
+eps = 1e-2
+error = a
+bar = IncrementalBar('Progress', max=10**3)
+for i in range(10**3):
+    bar.next()
+    if np.linalg.norm(error) > eps:
+        a -= 0.1*grad(func, a, dx=0.01)
+        error = grad(func, a, dx=0.01)
+    else:
+        break
+bar.finish()
+print(f'Значение функции при градиентном спуске: {round(func(a, A, y), 3)}\n', a)
