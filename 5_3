@@ -1,0 +1,6 @@
+from scipy.integrate import quad
+from numpy import sin, cos
+
+s1 = quad(lambda x: sin(x)*cos(cos(x))/x, 0, 1)
+s2 = quad(lambda x: cos(cos(x))/x, 1, float('inf'), weight='sin', wvar=1.0)
+print(s1[0]+s2[0])
