@@ -1,0 +1,19 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def f(t, y):
+    return y/t+2*np.log(t)
+
+y = np.zeros(6)
+h = 0.2
+t = np.linspace(1, 2, 6)
+for i in range(0, 5, 1):
+    y[i+1] = y[i] + h * f(t[i]+h/2, y[i]+h/2*f(t[i], y[i]))
+print(y)
+
+y_true = t * (np.log(t))**2
+y_euler = [0.0, 0.0, 0.07292862, 0.21793589, 0.43317933, 0.71642503]
+plt.plot(t, y, 'b.-', t, y_euler, 'g.-', t, y_true, 'r-')
+plt.legend(['Приближенное решение для '+str(len(t))+' точек методом Рунге-Кутты', 'Приближенное решение для '+str(len(t))+' точек методом Эйлера', 'Истинное решение'])
+plt.grid()
+plt.show()
